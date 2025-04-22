@@ -11,7 +11,6 @@
       box-sizing: border-box;
     }
     body {
-      overflow: hidden;
       background: linear-gradient(135deg, #f5e1ee, #d4a5e5);
       font-family: 'Georgia', serif;
       min-height: 100vh;
@@ -51,15 +50,19 @@
       transform: scale(1.05);
     }
     .message {
-      background: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.8);
+    
+    max-height: min-content;
       padding: 2rem;
-      border-radius: 1rem;
+    border-radius: 1rem;
+    width: 80%;
+    max-width: 600px;
       max-width: 500px;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
       animation: fadeIn 0.8s ease-in;
       display: none;
       position: absolute;
-      top: 50%;
+      top: 35%;
       left: 50%;
       transform: translateX(-50%);
       z-index: 20;
@@ -235,13 +238,40 @@
   </style>
 </head>
 <body><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-  <h1>To My Dearest Sara</h1>
+  
   <button class="button" onclick="showMessage()">Open My Heart</button><br><br>
   <br>
   <br>
 <div class="message" id="message">
     <p>
-      My dearest Sara, though we've never met, your words have woven a tapestry of warmth in my heart. Each text from you is a spark, lighting up my days with dreams of your smile, your laughter, your spirit. I feel you in every message, a connection that distance can't dim. You are my muse, my hope, my everything Ascendant, and I long for the day our words become reality.
+        <div class="love-letter">
+            <p>🥺💌 <strong>My sweetest Sara,</strong></p>
+            
+            <p>
+              We haven’t met yet, but your words already feel like a warm hug to my heart. 🤗💕  
+              Every time you text me, it lights up my day like sunshine ☀️ and makes me smile like never before 😊💖.
+            </p>
+            
+            <p>
+              I imagine your smile 😍, hear your laughter in my dreams 😄💭, and feel your sweet spirit in every word you send ✨🌸.  
+              It’s like we’re connected in a magical way ✨ — even from far away. 🌍❤️
+            </p>
+          
+            <p>
+              You’re not just someone special…  
+              You are my dream 🌙, my comfort 🧸, my hope 🌈, my everything 💗.  
+              My beautiful, kind, amazing Sara 💫👑.
+            </p>
+          
+            <p>
+              I can’t wait for the day I get to see you, hold your hand 🤝, and say all this looking into your eyes 🥹💞.  
+              Until then, I’ll keep loving you from here — with all my heart 💓.
+            </p>
+          
+            <p>Forever yours,  
+            <br>💖 Keshava 💖</p>
+          </div>
+           
     </p>
     <p class="signature">Love, Keshava</p>
     <button class="button" onclick="hideMessage()">Hide Message</button>
@@ -265,7 +295,16 @@
     }
 
     function createFloatingHeart() {
-      const colors = ['#ff6b6b', '#ec4899', '#8b5cf6'];
+      const colors = [ '#ff6b6b', // coral red
+  '#ec4899', // pink
+  '#8b5cf6', // purple
+  '#f472b6', // rose
+  '#facc15', // golden yellow
+  '#34d399', // teal green
+  '#60a5fa', // soft blue
+  '#fcd34d', // sunflower
+  '#e879f9', // lavender
+  '#fb7185',];
       const heart = document.createElement('div');
       heart.className = 'heart';
       heart.style.left = Math.random() * 100 + 'vw';
@@ -284,7 +323,7 @@
       const panda = document.createElement('div');
       panda.className = `panda ${Math.random() < 0.3 ? 'sparkle' : ''}`;
       panda.style.animationDelay = delay + 's';
-      panda.innerText = '🍓';
+    panda.innerText = '💙';
       return panda;
     }
 
@@ -353,7 +392,7 @@
     }
 
     drawSara();
-    setInterval(createFloatingHeart, 200);
+    setInterval(createFloatingHeart, 1000);
 
     const styleSheet = document.styleSheets[0];
     styleSheet.insertRule(`
