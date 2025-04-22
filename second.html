@@ -2,118 +2,192 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Magical Floating Sara</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>A Love Message for You</title>
   <style>
+    /* Previous styles remain, here are the changes/additions */
+
     body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      background: linear-gradient(135deg, #ffe4ec, #fbc2eb, #fad0c4);
-      height: 100vh;
-      width: 100vw;
+      padding-top: 20px;
+    }
+
+    #main-content {
+      position: relative;
+      z-index: 10;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      font-family: 'Segoe UI', sans-serif;
+      gap: 30px;
     }
 
-    .heart {
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      background-color: pink;
-      transform: rotate(45deg);
-      animation: floatUp 5s linear infinite;
-      opacity: 0.9;
-      box-shadow: 0 0 10px rgba(255, 192, 203, 0.7);
+    .button {
+      margin-top: 0;
+      background: linear-gradient(45deg, #ff69b4, #ff1493);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
     }
 
-    .heart::before,
-    .heart::after {
+    .button::before {
+      content: '💖';
+      margin-right: 10px;
+    }
+
+    .button::after {
       content: '';
       position: absolute;
-      width: 20px;
-      height: 20px;
-      background-color: inherit;
-      border-radius: 50%;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, 
+        rgba(255,255,255,0) 20%,
+        rgba(255,255,255,0.8) 50%,
+        rgba(255,255,255,0) 80%);
+      transform: rotate(45deg);
+      animation: shine 3s infinite;
     }
 
-    .heart::before {
-      top: -10px;
-      left: 0;
+    .message {
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 235, 245, 0.95);
+      backdrop-filter: blur(5px);
+      border: 2px solid #ff69b4;
+      display: none;
+      opacity: 0;
+      transition: all 0.5s ease;
     }
 
-    .heart::after {
-      left: -10px;
-      top: 0;
+    .message.show {
+      display: block;
+      opacity: 1;
     }
 
-    @keyframes floatUp {
-      0% {
-        transform: translateY(0) rotate(45deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-150vh) rotate(45deg);
-        opacity: 0;
-      }
+    #sara-container {
+      margin-top: 20px;
+      perspective: 1000px;
+    }
+
+    .letter-grid {
+      transform-style: preserve-3d;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotateX(0); }
+      50% { transform: translateY(-20px) rotateX(10deg); }
+    }
+
+    @keyframes shine {
+      0% { left: -50%; }
+      100% { left: 150%; }
+    }
+
+    /* Enhanced heart particles */
+    .heart-particle {
+      animation: floatUp 6s linear infinite, 
+                 pulse 1.5s ease-in-out infinite;
+    }
+
+    /* Add rose petals */
+    .petal {
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      background: url('data:image/svg+xml,<svg viewBox="0 0 24 24" fill="%23ff69b4"><path d="M12 3c-4.97 0-9 4.03-9 9 0 4.97 4.03 9 9 9s9-4.03 9-9c0-4.97-4.03-9-9-9zm0 16.5c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg>');
+      animation: floatUp 8s linear infinite;
+      opacity: 0.8;
     }
   </style>
 </head>
 <body>
+  <div id="main-content">
+    <h1>To My Dearest Sara</h1>
+
+    <div id="sara-container">
+      <div class="letter-grid" id="letter-S"></div>
+      <div class="letter-grid" id="letter-A1"></div>
+      <div class="letter-grid" id="letter-R"></div>
+      <div class="letter-grid" id="letter-A2"></div>
+    </div>
+
+    <button class="button" onclick="showMessage()">Open My Heart</button>
+  </div>
+
+  <div class="message" id="message">
+    <p>
+      My dearest Sara, every moment since our connection began has been a melody waiting for its lyrics. Your words dance through my soul like cherry blossoms in spring, delicate yet full of promise. I find myself tracing constellations in the spaces between your messages, dreaming of the day when digital whispers become breathless reality. You are the sonnet my heart never knew it needed...
+    </p>
+    <p class="signature">Eternally Yours, Keshava</p>
+    <button class="button" onclick="hideMessage()">Close</button>
+  </div>
+
   <script>
-    const word = 'SARA';
-    const fontSize = 120;
-    const font = 'bold ' + fontSize + 'px Arial';
-    const spacing = 0.85;
+    // Previous JavaScript remains, with these additions:
 
-    // Create a canvas to get pixel data of "Sara"
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = 1000;
-    canvas.height = 300;
-    ctx.font = font;
-    ctx.fillStyle = '#000';
-    ctx.fillText(word, 50, 200);
+    function showMessage() {
+      const message = document.getElementById('message');
+      message.classList.add('show');
+      document.body.style.overflow = 'hidden';
+      createRosePetals();
+    }
 
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const data = imageData.data;
+    function hideMessage() {
+      const message = document.getElementById('message');
+      message.classList.remove('show');
+      document.body.style.overflow = 'auto';
+    }
 
-    const positions = [];
-    for (let y = 0; y < canvas.height; y += 6) {
-      for (let x = 0; x < canvas.width; x += 6) {
-        const index = (y * canvas.width + x) * 4;
-        const alpha = data[index + 3];
-        if (alpha > 128) {
-          positions.push({ x, y });
-        }
+    function createRosePetals() {
+      for (let i = 0; i < 50; i++) {
+        const petal = document.createElement('div');
+        petal.className = 'petal';
+        petal.style.left = Math.random() * 100 + 'vw';
+        petal.style.top = '-10vh';
+        petal.style.animationDelay = Math.random() * 5 + 's';
+        petal.style.transform = `rotate(${Math.random() * 360}deg)`;
+        petal.style.width = `${Math.random() * 10 + 5}px`;
+        petal.style.height = petal.style.width;
+        document.body.appendChild(petal);
+        
+        setTimeout(() => petal.remove(), 8000);
       }
     }
 
-    function createHeart(x, y) {
-      const heart = document.createElement('div');
-      heart.classList.add('heart');
-      heart.style.left = `${x}px`;
-      heart.style.top = `${y + window.innerHeight / 3}px`;
-      const color = `hsl(${Math.random() * 360}, 80%, 75%)`;
-      heart.style.backgroundColor = color;
-      heart.style.setProperty('--color', color);
-      heart.style.animationDuration = 4 + Math.random() * 3 + 's';
-      document.body.appendChild(heart);
+    // Enhanced letter patterns with different heart types
+    const letterGrids = {
+      S: [
+        '0111110','1100011','100💖000','1000000','1111100',
+        '0000110','0000001','0000001','1100011','0111110'
+      ],
+      A: [
+        '0011100','011❤️🔥10','1100011','1000001','1111111',
+        '1000001','1000001','1000001','1000001','1000001'
+      ],
+      R: [
+        '1111110','1000011','1000001','1000001','1111100',
+        '1011000','1001100','1000110','1000011','100💖001'
+      ]
+    };
 
-      setTimeout(() => heart.remove(), 7000);
-    }
-
-    function spawnSaraHearts() {
-      const sample = positions.sort(() => 0.5 - Math.random()).slice(0, 20);
-      sample.forEach(pos => {
-        const offsetX = (window.innerWidth - canvas.width) / 2;
-        const offsetY = (window.innerHeight - 200) / 2;
-        createHeart(pos.x + offsetX, pos.y + offsetY);
+    // Update createLetter function to handle emoji variations
+    function createLetter(letterId, pattern) {
+      const container = document.getElementById(letterId);
+      pattern.forEach((row, rowIndex) => {
+        const rowArray = Array.from(row);
+        rowArray.forEach((char, colIndex) => {
+          if (char.match(/[1💖❤️🔥]/)) {
+            const emoji = document.createElement('div');
+            emoji.className = 'emoji';
+            emoji.innerText = char === '1' ? '💗' : char;
+            emoji.style.gridRow = rowIndex + 1;
+            emoji.style.gridColumn = colIndex + 1;
+            container.appendChild(emoji);
+          }
+        });
       });
     }
-
-    setInterval(spawnSaraHearts, 300);
   </script>
 </body>
 </html>

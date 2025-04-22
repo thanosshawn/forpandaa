@@ -18,14 +18,14 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
       padding: 20px;
       text-align: center;
+      position: relative;
     }
     h1 {
       font-size: 2.5rem;
       color: #9b2c6b;
-      margin-bottom: 2rem;
+      margin: 2rem 0;
       animation: pulse 2s infinite;
       z-index: 10;
     }
@@ -56,9 +56,13 @@
       border-radius: 1rem;
       max-width: 500px;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-      animation: fadeIn 1s ease-in;
+      animation: fadeIn 0.8s ease-in;
       display: none;
-      z-index: 10;
+      position: absolute;
+      top: 35%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
     }
     .message p {
       font-size: 1.2rem;
@@ -104,9 +108,9 @@
       left: 6px;
       top: 0;
     }
-    #balloons-container {
+    #pandas-container {
       position: absolute;
-      top: 10%;
+      top: 6%;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
@@ -120,27 +124,26 @@
       grid-template-rows: repeat(10, 15px);
       gap: 2px;
     }
-    .balloon {
-      width: 28px;
-      height: 42px;
+    .panda {
+      width: 32px;
+      height: 32px;
+      font-size: 28px;
+      line-height: 32px;
+      text-align: center;
       opacity: 0;
-      animation: floatBalloon 3s infinite ease-in-out, fadeInBalloon 0.6s forwards;
+      animation: floatPanda 3s infinite ease-in-out, fadeInPanda 0.6s forwards;
       position: relative;
     }
-    .balloon.sparkle::before {
+    .panda.sparkle::before {
       content: '';
       position: absolute;
-      width: 6px;
-      height: 6px;
+      width: 8px;
+      height: 8px;
       background: radial-gradient(circle, rgba(255,255,255,0.8) 20%, transparent 70%);
-      top: 5px;
-      left: 5px;
+      top: 4px;
+      left: 4px;
       border-radius: 50%;
       animation: sparkle 1.5s infinite;
-    }
-    .balloon svg {
-      width: 100%;
-      height: 100%;
     }
     @keyframes float {
       0% {
@@ -152,24 +155,24 @@
         opacity: 0;
       }
     }
-    @keyframes floatBalloon {
+    @keyframes floatPanda {
       0% {
         transform: translateY(0) rotate(0deg);
       }
       50% {
-        transform: translateY(-6px) rotate(2deg);
+        transform: translateY(-6px) rotate(3deg);
       }
       100% {
         transform: translateY(0) rotate(0deg);
       }
     }
-    @keyframes fadeInBalloon {
+    @keyframes fadeInPanda {
       from {
         opacity: 0;
         transform: scale(0.5);
       }
       to {
-        opacity: 0.95;
+        opacity: 1;
         transform: scale(1);
       }
     }
@@ -201,11 +204,11 @@
     @keyframes fadeIn {
       from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateX(-50%) scale(0.9);
       }
       to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateX(-50%) scale(1);
       }
     }
     #hearts-container {
@@ -217,20 +220,32 @@
       pointer-events: none;
       z-index: 4;
     }
+    @media (max-width: 600px) {
+      .message {
+        top: 40%;
+        max-width: 90%;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      #pandas-container {
+        top: 4%;
+      }
+    }
   </style>
 </head>
-<body>
+<body><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
   <h1>To My Dearest Sara</h1>
   <button class="button" onclick="showMessage()">Open My Heart</button>
-  <div class="message" id="message">
+<div class="message" id="message">
     <p>
-      My dearest Sara, though we've never met, Each text from you is a spark, lighting up my days with dreams of your smile, your laughter, your spirit. I feel you in every message, a connection that distance can't dim. You are my muse, my hope, my everything Ascendant, and I long for the day our words become reality.
+      My dearest Sara, though we've never met, your words have woven a tapestry of warmth in my heart. Each text from you is a spark, lighting up my days with dreams of your smile, your laughter, your spirit. I feel you in every message, a connection that distance can't dim. You are my muse, my hope, my everything Ascendant, and I long for the day our words become reality.
     </p>
     <p class="signature">Love, Keshava</p>
     <button class="button" onclick="hideMessage()">Hide Message</button>
   </div>
   <div id="hearts-container"></div>
-  <div id="balloons-container">
+  <div id="pandas-container">
     <div class="letter" id="letter-S"></div>
     <div class="letter" id="letter-A1"></div>
     <div class="letter" id="letter-R"></div>
@@ -263,27 +278,15 @@
       }, 6000);
     }
 
-    function createBalloon(color, delay) {
-      const balloon = document.createElement('div');
-      balloon.className = `balloon ${Math.random() < 0.3 ? 'sparkle' : ''}`;
-      balloon.style.animationDelay = delay + 's';
-      balloon.innerHTML = `
-        <svg viewBox="0 0 28 42">
-          <ellipse cx="14" cy="18" rx="12" ry="18">
-            <radialGradient id="grad${color.replace('#', '')}">
-              <stop offset="10%" stop-color="${color}" stop-opacity="1"/>
-              <stop offset="90%" stop-color="${color}" stop-opacity="0.7"/>
-            </radialGradient>
-            <ellipse cx="14" cy="18" rx="12" ry="18" fill="url(#grad${color.replace('#', '')})"/>
-          </ellipse>
-          <path d="M14 36 L14 42" stroke="#666" stroke-width="2"/>
-        </svg>
-      `;
-      return balloon;
+    function createPanda(delay) {
+      const panda = document.createElement('div');
+      panda.className = `panda ${Math.random() < 0.3 ? 'sparkle' : ''}`;
+      panda.style.animationDelay = delay + 's';
+      panda.innerText = '🐼';
+      return panda;
     }
 
     function drawSara() {
-      const colors = ['#ff6b6b', '#ec4899', '#8b5cf6', '#facc15', '#f472b6', '#a855f7', '#f43f5e'];
       const letterGrids = {
         S: [
           '0111110',
@@ -331,19 +334,18 @@
         grid.forEach((row, rowIndex) => {
           row.split('').forEach((cell, colIndex) => {
             if (cell === '1') {
-              const color = colors[Math.floor(Math.random() * colors.length)];
-              const balloon = createBalloon(color, delay);
-              balloon.style.gridRow = rowIndex + 1;
-              balloon.style.gridColumn = colIndex + 1;
-              container.appendChild(balloon);
-              delay += 0.10;
+              const panda = createPanda(delay);
+              panda.style.gridRow = rowIndex + 1;
+              panda.style.gridColumn = colIndex + 1;
+              container.appendChild(panda);
+              delay += 0.05;
             }
           });
         });
       });
 
       setTimeout(() => {
-        document.querySelectorAll('.balloon').forEach(balloon => balloon.remove());
+        document.querySelectorAll('.panda').forEach(panda => panda.remove());
         drawSara();
       }, 12000);
     }
