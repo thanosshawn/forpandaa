@@ -59,7 +59,7 @@
       animation: fadeIn 0.8s ease-in;
       display: none;
       position: absolute;
-      top: 35%;
+      top: 50%;
       left: 50%;
       transform: translateX(-50%);
       z-index: 20;
@@ -236,7 +236,9 @@
 </head>
 <body><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
   <h1>To My Dearest Sara</h1>
-  <button class="button" onclick="showMessage()">Open My Heart</button>
+  <button class="button" onclick="showMessage()">Open My Heart</button><br><br>
+  <br>
+  <br>
 <div class="message" id="message">
     <p>
       My dearest Sara, though we've never met, your words have woven a tapestry of warmth in my heart. Each text from you is a spark, lighting up my days with dreams of your smile, your laughter, your spirit. I feel you in every message, a connection that distance can't dim. You are my muse, my hope, my everything Ascendant, and I long for the day our words become reality.
@@ -282,7 +284,7 @@
       const panda = document.createElement('div');
       panda.className = `panda ${Math.random() < 0.3 ? 'sparkle' : ''}`;
       panda.style.animationDelay = delay + 's';
-      panda.innerText = '🐼';
+      panda.innerText = '🍓';
       return panda;
     }
 
@@ -351,7 +353,7 @@
     }
 
     drawSara();
-    setInterval(createFloatingHeart, 2000);
+    setInterval(createFloatingHeart, 200);
 
     const styleSheet = document.styleSheets[0];
     styleSheet.insertRule(`
