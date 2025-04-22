@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Magical Floating Sara</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: linear-gradient(135deg, #ffe4ec, #fbc2eb, #fad0c4);
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .heart {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: pink;
+      transform: rotate(45deg);
+      animation: floatUp 5s linear infinite;
+      opacity: 0.9;
+      box-shadow: 0 0 10px rgba(255, 192, 203, 0.7);
+    }
+
+    .heart::before,
+    .heart::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: inherit;
+      border-radius: 50%;
+    }
+
+    .heart::before {
+      top: -10px;
+      left: 0;
+    }
+
+    .heart::after {
+      left: -10px;
+      top: 0;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) rotate(45deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-150vh) rotate(45deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <script>
+    const word = 'SARA';
+    const fontSize = 120;
+    const font = 'bold ' + fontSize + 'px Arial';
+    const spacing = 0.85;
+
+    // Create a canvas to get pixel data of "Sara"
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 1000;
+    canvas.height = 300;
+    ctx.font = font;
+    ctx.fillStyle = '#000';
+    ctx.fillText(word, 50, 200);
+
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+
+    const positions = [];
+    for (let y = 0; y < canvas.height; y += 6) {
+      for (let x = 0; x < canvas.width; x += 6) {
+        const index = (y * canvas.width + x) * 4;
+        const alpha = data[index + 3];
+        if (alpha > 128) {
+          positions.push({ x, y });
+        }
+      }
+    }
+
+    function createHeart(x, y) {
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.style.left = `${x}px`;
+      heart.style.top = `${y + window.innerHeight / 3}px`;
+      const color = `hsl(${Math.random() * 360}, 80%, 75%)`;
+      heart.style.backgroundColor = color;
+      heart.style.setProperty('--color', color);
+      heart.style.animationDuration = 4 + Math.random() * 3 + 's';
+      document.body.appendChild(heart);
+
+      setTimeout(() => heart.remove(), 7000);
+    }
+
+    function spawnSaraHearts() {
+      const sample = positions.sort(() => 0.5 - Math.random()).slice(0, 20);
+      sample.forEach(pos => {
+        const offsetX = (window.innerWidth - canvas.width) / 2;
+        const offsetY = (window.innerHeight - 200) / 2;
+        createHeart(pos.x + offsetX, pos.y + offsetY);
+      });
+    }
+
+    setInterval(spawnSaraHearts, 300);
+  </script>
+</body>
+</html>

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -66,6 +65,13 @@
       color: #333;
       line-height: 1.8;
     }
+    .message .signature {
+      font-style: italic;
+      font-size: 1.1rem;
+      color: #9b2c6b;
+      margin-top: 1rem;
+      text-align: right;
+    }
     .message .button {
       margin-top: 1.5rem;
       background: #8b5cf6;
@@ -79,12 +85,8 @@
       height: 12px;
       transform: rotate(45deg);
       pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.5s, transform 0.5s;
-    }
-    .heart.visible {
-      opacity: 0.9;
-      transform: rotate(45deg) scale(1);
+      opacity: 0.3;
+      animation: float 6s infinite;
     }
     .heart::before,
     .heart::after {
@@ -102,18 +104,87 @@
       left: 6px;
       top: 0;
     }
-    .floating-heart {
-      animation: float 8s infinite;
-      opacity: 0.7;
+    #balloons-container {
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 30px;
+      pointer-events: none;
+      z-index: 5;
+    }
+    .letter {
+      display: grid;
+      grid-template-columns: repeat(7, 15px);
+      grid-template-rows: repeat(10, 15px);
+      gap: 2px;
+    }
+    .balloon {
+      width: 28px;
+      height: 42px;
+      opacity: 0;
+      animation: floatBalloon 3s infinite ease-in-out, fadeInBalloon 0.6s forwards;
+      position: relative;
+    }
+    .balloon.sparkle::before {
+      content: '';
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: radial-gradient(circle, rgba(255,255,255,0.8) 20%, transparent 70%);
+      top: 5px;
+      left: 5px;
+      border-radius: 50%;
+      animation: sparkle 1.5s infinite;
+    }
+    .balloon svg {
+      width: 100%;
+      height: 100%;
     }
     @keyframes float {
       0% {
-        transform: translateY(90vh) rotate(45deg);
-        opacity: 0.7;
+        transform: translateY(100vh) rotate(45deg);
+        opacity: 0.3;
       }
       100% {
         transform: translateY(-10vh) rotate(45deg);
         opacity: 0;
+      }
+    }
+    @keyframes floatBalloon {
+      0% {
+        transform: translateY(0) rotate(0deg);
+      }
+      50% {
+        transform: translateY(-6px) rotate(2deg);
+      }
+      100% {
+        transform: translateY(0) rotate(0deg);
+      }
+    }
+    @keyframes fadeInBalloon {
+      from {
+        opacity: 0;
+        transform: scale(0.5);
+      }
+      to {
+        opacity: 0.95;
+        transform: scale(1);
+      }
+    }
+    @keyframes sparkle {
+      0% {
+        transform: scale(1);
+        opacity: 0.8;
+      }
+      50% {
+        transform: scale(1.5);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 0.8;
       }
     }
     @keyframes pulse {
@@ -144,7 +215,7 @@
       width: 100%;
       height: 100%;
       pointer-events: none;
-      z-index: 5;
+      z-index: 4;
     }
   </style>
 </head>
@@ -153,11 +224,18 @@
   <button class="button" onclick="showMessage()">Open My Heart</button>
   <div class="message" id="message">
     <p>
-      My dearest Sara, words can barely capture the warmth you bring to my soul. Every moment with you feels like a melody, soft and eternal. Your smile lights up my world, and your laughter is my favorite song. I am endlessly grateful for you, and my heart is yours, now and always.
+      My dearest Sara, though we've never met, Each text from you is a spark, lighting up my days with dreams of your smile, your laughter, your spirit. I feel you in every message, a connection that distance can't dim. You are my muse, my hope, my everything Ascendant, and I long for the day our words become reality.
     </p>
+    <p class="signature">Love, Keshava</p>
     <button class="button" onclick="hideMessage()">Hide Message</button>
   </div>
   <div id="hearts-container"></div>
+  <div id="balloons-container">
+    <div class="letter" id="letter-S"></div>
+    <div class="letter" id="letter-A1"></div>
+    <div class="letter" id="letter-R"></div>
+    <div class="letter" id="letter-A2"></div>
+  </div>
   <script>
     function showMessage() {
       document.getElementById('message').style.display = 'block';
@@ -169,58 +247,12 @@
       document.querySelector('button[onclick="showMessage()"]').style.display = 'block';
     }
 
-    function createHeart(x, y, color) {
-      const heart = document.createElement('div');
-      heart.className = 'heart';
-      heart.style.left = x + 'px';
-      heart.style.top = y + 'px';
-      heart.style.background = color;
-      heart.style.setProperty('--before-bg', color);
-      heart.style.setProperty('--after-bg', color);
-      document.getElementById('hearts-container').appendChild(heart);
-      setTimeout(() => {
-        heart.classList.add('visible');
-      }, 100);
-      return heart;
-    }
-
-    function drawSara() {
-      const colors = ['#ff6b6b', '#ec4899', '#8b5cf6', '#facc15', '#f472b6', '#a855f7', '#f43f5e'];
-      const letterPositions = {
-        S: [[0,0],[0,12],[0,24],[12,0],[24,0],[24,12],[24,24],[12,24]],
-        A: [[0,0],[0,12],[0,24],[12,0],[24,0],[12,12],[24,12],[12,24],[24,24]],
-        R: [[0,0],[0,12],[0,24],[12,0],[24,0],[12,12],[24,12],[12,24]]
-      };
-      const hearts = [];
-      let currentX = window.innerWidth * 0.35;
-      const offsetY = window.innerHeight * 0.15;
-      'Sara'.split('').forEach((letter, index) => {
-        if (letterPositions[letter.toUpperCase()]) {
-          letterPositions[letter.toUpperCase()].forEach(([x, y]) => {
-            const color = colors[Math.floor(Math.random() * colors.length)];
-            hearts.push({ x: currentX + x, y: offsetY + y, color });
-          });
-          currentX += 36;
-        }
-      });
-      let heartIndex = 0;
-      function placeNextHeart() {
-        if (heartIndex < hearts.length) {
-          const { x, y, color } = hearts[heartIndex];
-          createHeart(x, y, color);
-          heartIndex++;
-          setTimeout(placeNextHeart, 200);
-        }
-      }
-      placeNextHeart();
-    }
-
     function createFloatingHeart() {
       const colors = ['#ff6b6b', '#ec4899', '#8b5cf6'];
       const heart = document.createElement('div');
-      heart.className = 'heart floating-heart';
+      heart.className = 'heart';
       heart.style.left = Math.random() * 100 + 'vw';
-      heart.style.animationDelay = Math.random() * 5 + 's';
+      heart.style.animationDelay = Math.random() * 4 + 's';
       const color = colors[Math.floor(Math.random() * colors.length)];
       heart.style.background = color;
       heart.style.setProperty('--before-bg', color);
@@ -228,11 +260,96 @@
       document.getElementById('hearts-container').appendChild(heart);
       setTimeout(() => {
         heart.remove();
-      }, 8000);
+      }, 6000);
+    }
+
+    function createBalloon(color, delay) {
+      const balloon = document.createElement('div');
+      balloon.className = `balloon ${Math.random() < 0.3 ? 'sparkle' : ''}`;
+      balloon.style.animationDelay = delay + 's';
+      balloon.innerHTML = `
+        <svg viewBox="0 0 28 42">
+          <ellipse cx="14" cy="18" rx="12" ry="18">
+            <radialGradient id="grad${color.replace('#', '')}">
+              <stop offset="10%" stop-color="${color}" stop-opacity="1"/>
+              <stop offset="90%" stop-color="${color}" stop-opacity="0.7"/>
+            </radialGradient>
+            <ellipse cx="14" cy="18" rx="12" ry="18" fill="url(#grad${color.replace('#', '')})"/>
+          </ellipse>
+          <path d="M14 36 L14 42" stroke="#666" stroke-width="2"/>
+        </svg>
+      `;
+      return balloon;
+    }
+
+    function drawSara() {
+      const colors = ['#ff6b6b', '#ec4899', '#8b5cf6', '#facc15', '#f472b6', '#a855f7', '#f43f5e'];
+      const letterGrids = {
+        S: [
+          '0111110',
+          '1100011',
+          '1000000',
+          '1000000',
+          '1111100',
+          '0000110',
+          '0000001',
+          '0000001',
+          '1000011',
+          '0111110'
+        ],
+        A: [
+          '0011100',
+          '0110110',
+          '1100011',
+          '1000001',
+          '1111111',
+          '1000001',
+          '1000001',
+          '1000001',
+          '1000001',
+          '1000001'
+        ],
+        R: [
+          '1111110',
+          '1000011',
+          '1000001',
+          '1000001',
+          '1111100',
+          '1011000',
+          '1001100',
+          '1000110',
+          '1000011',
+          '1000001'
+        ]
+      };
+
+      ['S', 'A1', 'R', 'A2'].forEach((letter, letterIndex) => {
+        const container = document.getElementById(`letter-${letter}`);
+        const grid = letterGrids[letter.replace(/\d/, '')];
+        let delay = letterIndex * 2;
+
+        grid.forEach((row, rowIndex) => {
+          row.split('').forEach((cell, colIndex) => {
+            if (cell === '1') {
+              const color = colors[Math.floor(Math.random() * colors.length)];
+              const balloon = createBalloon(color, delay);
+              balloon.style.gridRow = rowIndex + 1;
+              balloon.style.gridColumn = colIndex + 1;
+              container.appendChild(balloon);
+              delay += 0.05;
+            }
+          });
+        });
+      });
+
+      setTimeout(() => {
+        document.querySelectorAll('.balloon').forEach(balloon => balloon.remove());
+        drawSara();
+      }, 12000);
     }
 
     drawSara();
-    setInterval(createFloatingHeart, 1000);
+    setInterval(createFloatingHeart, 2000);
 
     const styleSheet = document.styleSheets[0];
     styleSheet.insertRule(`
